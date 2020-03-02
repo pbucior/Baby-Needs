@@ -46,11 +46,23 @@ public class MainActivity extends AppCompatActivity {
         itemQuantity = view.findViewById(R.id.itemQuantity);
         itemColor = view.findViewById(R.id.itemColor);
         itemSize = view.findViewById(R.id.itemSize);
+        saveButton = view.findViewById(R.id.saveButton);
+
+        saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                saveItem();
+            }
+        });
 
         builder.setView(view);
 
         dialog = builder.create();
         dialog.show();
+    }
+
+    private void saveItem() {
+
     }
 
     @Override

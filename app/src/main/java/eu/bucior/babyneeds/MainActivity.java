@@ -12,6 +12,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
+
+import eu.bucior.babyneeds.data.DatabaseHandler;
+import eu.bucior.babyneeds.model.Item;
 
 public class MainActivity extends AppCompatActivity {
     private AlertDialog.Builder builder;
@@ -21,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText itemQuantity;
     private EditText itemColor;
     private EditText itemSize;
+    private DatabaseHandler databaseHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +33,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        databaseHandler = new DatabaseHandler(this);
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -51,7 +58,14 @@ public class MainActivity extends AppCompatActivity {
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                saveItem();
+                if (!babyItem.getText().toString().isEmpty()
+                        && !itemColor.getText().toString().isEmpty()
+                        && !itemQuantity.getText().toString().isEmpty()
+                        && !itemSize.getText().toString().isEmpty()) {
+                    saveItem(v);
+                } else {
+                    Snackbar.make(v, "Empty fields not allowed", Snackbar.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -61,7 +75,22 @@ public class MainActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    private void saveItem() {
+    private void saveItem(View view) {
+        Item item = new Item();
+
+        String newItem = babyItem.getText().toString().trim();
+        String newColor = itemColor.getText().toString().trim();
+        int quantity = Integer.parseInt(itemQuantity.getText().toString().trim());
+        int size = Integer.parseInt(itemSize.getText().toString().trim());
+
+        item.setItemName(newItem);
+        item.setItemColor(newColor);
+        item.setItemQuantity(quantity);
+        item.setItemSize(size);
+
+        databaseHandler.addItem(item);
+
+        Snackbar.make(view, "Item Saved", Snackbar.LENGTH_SHORT).show();
 
     }
 

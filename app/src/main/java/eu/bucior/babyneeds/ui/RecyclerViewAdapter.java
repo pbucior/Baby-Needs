@@ -1,5 +1,6 @@
 package eu.bucior.babyneeds.ui;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,12 +15,16 @@ import java.text.MessageFormat;
 import java.util.List;
 
 import eu.bucior.babyneeds.R;
+import eu.bucior.babyneeds.data.DatabaseHandler;
 import eu.bucior.babyneeds.model.Item;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
 
     private Context context;
     private List<Item> itemList;
+    private AlertDialog.Builder builder;
+    private AlertDialog dialog;
+    private LayoutInflater inflater;
 
     public RecyclerViewAdapter(Context context, List<Item> itemList) {
         this.context = context;
@@ -79,14 +84,51 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         @Override
         public void onClick(View v) {
+
+            int position;
+
             switch (v.getId()) {
                 case R.id.edit_button:
-
                     break;
                 case R.id.delete_button:
-
+                    position = getAdapterPosition();
+                    Item item = itemList.get(position);
+                    deleteItem(item.getId());
                     break;
             }
+
+        }
+
+        private void deleteItem(final int id) {
+
+            builder = new AlertDialog.Builder(context);
+            inflater = LayoutInflater.from(context);
+            View view = inflater.inflate(R.layout.confirmation_pop, null);
+
+            Button noButton = view.findViewById(R.id.conf_no_button);
+            Button yesButton = view.findViewById(R.id.conf_yes_button);
+
+            builder.setView(view);
+            dialog = builder.create();
+            dialog.show();
+
+            yesButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    DatabaseHandler db = new DatabaseHandler(context);
+                    db.deleteItem(id);
+                    itemList.remove(getAdapterPosition());
+                    notifyItemRemoved(getAdapterPosition());
+                    dialog.dismiss();
+                }
+            });
+
+            noButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                }
+            });
         }
     }
 }

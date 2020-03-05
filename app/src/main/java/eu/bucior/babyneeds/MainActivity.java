@@ -38,6 +38,8 @@ public class MainActivity extends AppCompatActivity {
 
         databaseHandler = new DatabaseHandler(this);
 
+        byPassActivity();
+
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -45,6 +47,13 @@ public class MainActivity extends AppCompatActivity {
                 createPopupDialog();
             }
         });
+    }
+
+    private void byPassActivity() {
+        if (databaseHandler.getItemsCount() > 0) {
+            startActivity(new Intent(MainActivity.this, ListActivity.class));
+            finish();
+        }
     }
 
     private void createPopupDialog() {

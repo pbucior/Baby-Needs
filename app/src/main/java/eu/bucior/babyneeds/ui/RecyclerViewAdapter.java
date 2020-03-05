@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.MessageFormat;
 import java.util.List;
 
 import eu.bucior.babyneeds.R;
@@ -36,11 +37,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @Override
     public void onBindViewHolder(@NonNull RecyclerViewAdapter.ViewHolder holder, int position) {
         Item item = itemList.get(position);
-        holder.itemName.setText(item.getItemName());
-        holder.itemColor.setText(item.getItemColor());
-        holder.itemQuantity.setText(String.valueOf(item.getItemQuantity()));
-        holder.itemSize.setText(String.valueOf(item.getItemSize()));
-        holder.itemDataAdded.setText(item.getDateItemAdded());
+        holder.itemName.setText(MessageFormat.format("Item: {0}", item.getItemName()));
+        holder.itemColor.setText(MessageFormat.format("Color: {0}", item.getItemColor()));
+        holder.itemQuantity.setText(MessageFormat.format("Qty: {0}", String.valueOf(item.getItemQuantity())));
+        holder.itemSize.setText(MessageFormat.format("Size: {0}", String.valueOf(item.getItemSize())));
+        holder.itemDataAdded.setText(MessageFormat.format("Added on: {0}", item.getDateItemAdded()));
     }
 
     @Override

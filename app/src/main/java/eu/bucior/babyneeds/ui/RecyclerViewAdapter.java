@@ -6,10 +6,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.snackbar.Snackbar;
 
 import java.text.MessageFormat;
 import java.util.List;
@@ -25,6 +28,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private AlertDialog.Builder builder;
     private AlertDialog dialog;
     private LayoutInflater inflater;
+
 
     public RecyclerViewAdapter(Context context, List<Item> itemList) {
         this.context = context;
@@ -85,14 +89,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         @Override
         public void onClick(View v) {
 
-            int position;
+            int position = getAdapterPosition();
+            Item item = itemList.get(position);
 
             switch (v.getId()) {
                 case R.id.edit_button:
+                    editItem(item);
                     break;
                 case R.id.delete_button:
-                    position = getAdapterPosition();
-                    Item item = itemList.get(position);
                     deleteItem(item.getId());
                     break;
             }
@@ -126,6 +130,62 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             noButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    dialog.dismiss();
+                }
+            });
+        }
+
+        private void editItem(final Item newItem) {
+
+            builder = new AlertDialog.Builder(context);
+            inflater = LayoutInflater.from(context);
+            View view = inflater.inflate(R.layout.popup, null);
+
+            Button saveButton;
+            final EditText babyItem;
+            final EditText itemQuantity;
+            final EditText itemColor;
+            final EditText itemSize;
+            TextView title;
+
+            babyItem = view.findViewById(R.id.babyItem);
+            itemQuantity = view.findViewById(R.id.itemQuantity);
+            itemColor = view.findViewById(R.id.itemColor);
+            itemSize = view.findViewById(R.id.itemSize);
+            saveButton = view.findViewById(R.id.saveButton);
+            saveButton.setText(R.string.update_text);
+            title = view.findViewById(R.id.title);
+
+
+            title.setText(R.string.edit_title);
+            babyItem.setText(newItem.getItemName());
+            itemQuantity.setText(String.valueOf(newItem.getItemQuantity()));
+            itemColor.setText(newItem.getItemColor());
+            itemSize.setText(String.valueOf(newItem.getItemSize()));
+
+            builder.setView(view);
+            dialog = builder.create();
+            dialog.show();
+
+            saveButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    DatabaseHandler databaseHandler = new DatabaseHandler(context);
+
+                    newItem.setItemName(babyItem.getText().toString());
+                    newItem.setItemQuantity(Integer.parseInt(itemQuantity.getText().toString()));
+                    newItem.setItemColor(itemColor.getText().toString());
+                    newItem.setItemSize(Integer.parseInt(itemSize.getText().toString()));
+
+                    if (!babyItem.getText().toString().isEmpty()
+                            && !itemColor.getText().toString().isEmpty()
+                            && !itemQuantity.getText().toString().isEmpty()
+                            && !itemSize.getText().toString().isEmpty()) {
+                        databaseHandler.updateItem(newItem);
+                        notifyItemChanged(getAdapterPosition(), newItem);
+                    } else {
+                        Snackbar.make(v, "Empty fields not allowed", Snackbar.LENGTH_SHORT).show();
+                    }
                     dialog.dismiss();
                 }
             });

@@ -38,8 +38,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         Item item = itemList.get(position);
         holder.itemName.setText(item.getItemName());
         holder.itemColor.setText(item.getItemColor());
-        holder.itemQuantity.setText(item.getItemQuantity());
-        holder.itemSize.setText(item.getItemSize());
+        holder.itemQuantity.setText(String.valueOf(item.getItemQuantity()));
+        holder.itemSize.setText(String.valueOf(item.getItemSize()));
         holder.itemDataAdded.setText(item.getDateItemAdded());
     }
 

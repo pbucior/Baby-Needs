@@ -65,6 +65,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 new String[]{Constants.KEY_ID,
                         Constants.KEY_ITEM,
                         Constants.KEY_QUANTITY,
+                        Constants.KEY_COLOR,
                         Constants.KEY_SIZE,
                         Constants.KEY_DATE_ADDED},
                 Constants.KEY_ID + "=?",
@@ -78,6 +79,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             item.setId(cursor.getInt(cursor.getColumnIndex(Constants.KEY_ID)));
             item.setItemName(cursor.getString(cursor.getColumnIndex(Constants.KEY_ITEM)));
             item.setItemQuantity(cursor.getInt(cursor.getColumnIndex(Constants.KEY_QUANTITY)));
+            item.setItemColor(cursor.getString(cursor.getColumnIndex(Constants.KEY_COLOR)));
             item.setItemSize(cursor.getInt(cursor.getColumnIndex(Constants.KEY_SIZE)));
 
             DateFormat dateFormat = DateFormat.getDateInstance();
@@ -99,6 +101,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 new String[]{Constants.KEY_ID,
                         Constants.KEY_ITEM,
                         Constants.KEY_QUANTITY,
+                        Constants.KEY_COLOR,
                         Constants.KEY_SIZE,
                         Constants.KEY_DATE_ADDED},
                 null, null, null, null,
@@ -110,6 +113,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 item.setId(cursor.getInt(cursor.getColumnIndex(Constants.KEY_ID)));
                 item.setItemName(cursor.getString(cursor.getColumnIndex(Constants.KEY_ITEM)));
                 item.setItemQuantity(cursor.getInt(cursor.getColumnIndex(Constants.KEY_QUANTITY)));
+                item.setItemColor(cursor.getString(cursor.getColumnIndex(Constants.KEY_COLOR)));
                 item.setItemSize(cursor.getInt(cursor.getColumnIndex(Constants.KEY_SIZE)));
 
                 DateFormat dateFormat = DateFormat.getDateInstance();
